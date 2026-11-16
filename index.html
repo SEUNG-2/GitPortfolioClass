@@ -86,12 +86,12 @@
 
     <section class="contact-section container reveal" id="contact">
       <div class="contact-copy"><p class="eyebrow">02 — Get in touch</p><h2>새로운 장면을<br><em>함께 만들까요?</em></h2><p>아이디어가 아직 선명하지 않아도 괜찮아요.<br>가볍게 이야기를 시작해 보세요.</p></div>
-      <form class="contact-form" id="contactForm">
-        <label>이름 <input type="text" name="name" placeholder="홍길동" required></label>
-        <label>이메일 <input type="email" name="email" placeholder="hello@example.com" required></label>
-        <label>어떤 이야기를 나눌까요? <textarea name="message" rows="3" placeholder="프로젝트에 대해 간단히 알려주세요." required></textarea></label>
+      <form class="contact-form" id="contactForm" novalidate>
+        <label>이름 <input type="text" name="name" placeholder="홍길동" aria-describedby="nameError" required><span class="field-error" id="nameError"></span></label>
+        <label>이메일 <input type="email" name="email" placeholder="hello@example.com" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" aria-describedby="emailError" required><span class="field-error" id="emailError"></span></label>
+        <label>어떤 이야기를 나눌까요? <textarea name="message" rows="3" placeholder="프로젝트에 대해 간단히 알려주세요." aria-describedby="messageError" required></textarea><span class="field-error" id="messageError"></span></label>
         <button class="button button-light" type="submit">메시지 보내기 <span>↗</span></button>
-        <p class="form-note" id="formNote" role="status"></p>
+        <p class="form-note" id="formNote" role="status" aria-live="polite" aria-atomic="true"></p>
       </form>
     </section>
   </main>
