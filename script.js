@@ -112,10 +112,58 @@ projectModal.addEventListener("click", (event) => {
 });
 document.addEventListener("keydown", handleProjectModalKeydown);
 
-document.getElementById("contactForm").addEventListener("submit", (event) => {
+const contactForm = document.getElementById("contactForm");
+const formNote = document.getElementById("formNote");
+const contactFields = [
+  {
+    input: contactForm.elements.name,
+    error: document.getElementById("nameError"),
+    validate() {
+      return this.input.value.trim() ? "" : "이름을 입력해 주세요.";
+    }
+  },
+  {
+    input: contactForm.elements.email,
+    error: document.getElementById("emailError"),
+    validate() {
+      if (!this.input.value.trim()) return "이메일 주소를 입력해 주세요.";
+      return this.input.validity.typeMismatch || this.input.validity.patternMismatch
+        ? "올바른 이메일 주소를 입력해 주세요."
+        : "";
+    }
+  },
+  {
+    input: contactForm.elements.message,
+    error: document.getElementById("messageError"),
+    validate() {
+      return this.input.value.trim() ? "" : "메시지를 입력해 주세요.";
+    }
+  }
+];
+
+function validateContactField(field) {
+  const errorMessage = field.validate();
+  field.error.textContent = errorMessage;
+  field.input.setAttribute("aria-invalid", String(Boolean(errorMessage)));
+  return errorMessage;
+}
+
+contactFields.forEach((field) => {
+  field.input.addEventListener("input", () => {
+    if (field.input.getAttribute("aria-invalid") === "true") validateContactField(field);
+    formNote.textContent = "";
+  });
+});
+
+contactForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const note = document.getElementById("formNote");
-  const name = event.currentTarget.elements.name.value.trim();
-  note.textContent = `${name}님, 메시지를 확인했어요. 곧 답장드릴게요!`;
-  event.currentTarget.reset();
+  const invalidFields = contactFields.filter((field) => validateContactField(field));
+
+  if (invalidFields.length) {
+    formNote.textContent = "입력 내용을 확인해 주세요.";
+    invalidFields[0].input.focus();
+    return;
+  }
+
+  formNote.textContent = "입력한 정보가 모두 확인되었습니다. 데모 양식으로 실제 이메일은 전송되지 않습니다.";
 });
